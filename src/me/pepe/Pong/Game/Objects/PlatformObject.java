@@ -12,7 +12,7 @@ public class PlatformObject extends GameObject {
 	private int goals = 0;
 	private Color color;
 	public PlatformObject(int x, Color color, Game game) {
-		super(new GameLocation(x, (game.getWindows().getY()/2) - (80/2)), game, new ObjectDimension(20, 80));
+		super(new GameLocation(x, (game.getWindows().getYToPaint()/2) - (80/2)), game, new ObjectDimension(20, 80));
 		this.color = color;
 		setWindowsPassable(false);
 	}

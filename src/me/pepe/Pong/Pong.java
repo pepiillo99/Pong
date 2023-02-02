@@ -10,7 +10,7 @@ public class Pong {
 	}
 	public Pong() {
 		GameAPI gameAPI = new GameAPI();
-		Game game = new Game("PingPong", 900, 600, null);
+		Game game = new Game("Pong", 900, 600, null);
 		game.getWindows().setCanFullScreen(false);
 		game.getWindows().setResizable(false);
 		game.setMaxFPS(60);

@@ -29,14 +29,6 @@ public class GameScreen extends Screen {
 	private boolean paused = true;
 	public GameScreen(Windows windows, Game game) {
 		super(windows, game);
-		player1 = new PlatformObject(1, Color.RED, getGame());
-		player2 = new PlatformObject(getWindows().getXToPaint() - 20, Color.BLUE, getGame());
-		marcador = new Label("0          0", Color.WHITE, new Font("Aria", Font.BOLD, 50), new PixelInteligentPosition((game.getWindows().getX() / 2) - 200, 50), getGame(), new PixelInteligentDimension(400, 50));
-		marcador.setAligment(LabelAligment.CENTER);
-		addGameObject(marcador);
-		addGameObject(player1);
-		addGameObject(player2);
-		restartGame();
 		setKeyInput(new KeyInput(this) {
 			@Override
 			public void tick() {
@@ -62,7 +54,9 @@ public class GameScreen extends Screen {
 				} else if (key == KeyEvent.VK_ESCAPE) {
 					restartGame();
 				} else if (key == KeyEvent.VK_SPACE) {
-					onStart();
+					if (paused) {
+						onStart();
+					}
 				}
 			}
 			@Override
@@ -70,11 +64,22 @@ public class GameScreen extends Screen {
 		});
 	}
 	@Override
+	public void onOpen() {
+		player1 = new PlatformObject(0, Color.RED, getGame());
+		player2 = new PlatformObject(getWindows().getXToPaint() - 20, Color.BLUE, getGame());
+		marcador = new Label("0          0", Color.WHITE, new Font("Aria", Font.BOLD, 50), new PixelInteligentPosition((getGame().getWindows().getXToPaint() / 2) - 200, 50), getGame(), new PixelInteligentDimension(400, 50));
+		marcador.setAligment(LabelAligment.CENTER);
+		addGameObject(marcador);
+		addGameObject(player1);
+		addGameObject(player2);
+		restartGame();
+	}
+	@Override
 	public void internalTick() {}
 	@Override
 	protected void paintLevel(Graphics g) {
 		g.setColor(Color.WHITE);
-		g.drawLine(getWindows().getX() / 2, 0, getWindows().getX() / 2, getWindows().getY());
+		g.drawLine(getWindows().getXToPaint() / 2, 0, getWindows().getXToPaint() / 2, getWindows().getYToPaint());
 		if (paused) {
 			marcador.setText("PULSA ESPACIO PARA JUGAR");
 		} else {
@@ -82,17 +87,16 @@ public class GameScreen extends Screen {
 		}
 	}
 	public void restartGame() {
-		System.out.println("borrando pelotas faltasmas");
 		restartObjects(BallObject.class);
 		paused = true;
 		turn = 2;
 		if (ball != null) {
 			removeGameObject(ball);
 		}
-		ball = new BallObject(new GameLocation((getWindows().getX() / 2) - (20 / 2), getWindows().getY() / 2), getGame(), new ObjectDimension(20, 20), this);
+		ball = new BallObject(new GameLocation((getWindows().getXToPaint() / 2) - (20 / 2), getWindows().getYToPaint() / 2), getGame(), new ObjectDimension(20, 20), this);
 		addGameObject(ball);
-		player1.setY(getWindows().getY()/2);
-		player2.setY(getWindows().getY()/2);
+		player1.setY(getWindows().getYToPaint()/2);
+		player2.setY(getWindows().getYToPaint()/2);
 	}
 	public void onStart() {
 		paused = false;
